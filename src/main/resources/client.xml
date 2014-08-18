@@ -1,0 +1,21 @@
+<!DOCTYPE client-cache PUBLIC
+        "-//GemStone Systems, Inc.//GemFire Declarative Caching 8.0//EN" "http://www.gemstone.com/dtd/cache8_0.dtd">
+<client-cache>
+    <pool name="client" subscription-enabled="true">
+        <locator host="127.0.0.1" port="10334" />
+    </pool>
+
+    <pdx read-serialized="true">
+        <pdx-serializer>
+            <class-name>com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer</class-name>
+            <parameter name="classes">
+                <string>pivotal\.au\.fe\.anzpoc\.domain\..*</string>
+            </parameter>
+        </pdx-serializer>
+    </pdx>
+
+    <region name="tradeRegion">
+        <region-attributes refid="PROXY" pool-name="client">
+        </region-attributes>
+    </region>
+</client-cache>
