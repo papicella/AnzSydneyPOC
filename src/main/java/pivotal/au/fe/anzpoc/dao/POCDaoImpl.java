@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class POCDaoImpl implements POCDao
@@ -20,6 +20,8 @@ public class POCDaoImpl implements POCDao
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
+    private List<TradeMetadata> tradeMetaDataList = new ArrayList<TradeMetadata>();
+    private Map<String, String> tradeMetaDataMap = new HashMap<String, String>();
 
     public void setDataSource(DataSource dataSource)
     {
@@ -29,14 +31,18 @@ public class POCDaoImpl implements POCDao
     @Override
     public void storeTradeObjectBatch(List<TradeObject> tradeEntries)
     {
-       final List<TradeMetadata> tradeMetaDataList = new ArrayList<TradeMetadata>();
+
+      tradeMetaDataMap = new HashMap<String, String>();
 
        for (TradeObject trade: tradeEntries)
        {
-           Map<String, String> tradeMetaDataMap = trade.getTradeAttributes();
+           tradeMetaDataList = new ArrayList<TradeMetadata>();
+           tradeMetaDataMap = new HashMap<String, String>();
+           tradeMetaDataMap = trade.getTradeAttributes();
+           TradeMetadata tradeMetaData = null;
            for (Map.Entry<String,String> entry : tradeMetaDataMap.entrySet())
            {
-               TradeMetadata tradeMetaData =
+               tradeMetaData =
                        new TradeMetadata(trade.getTradeId(), entry.getKey(), entry.getValue());
 
                tradeMetaDataList.add(tradeMetaData);
@@ -48,7 +54,7 @@ public class POCDaoImpl implements POCDao
                            new BigDecimal(trade.getTradeId()),
                                           trade.getPayloadDigest(),
                                           trade.getPayload(),
-                                          trade.getCreatedTimeStamp());
+                                          new String("" + trade.getCreatedTimeStamp()));
 
            // insert trade meta data entries
            int[] updateCounts =
@@ -72,7 +78,5 @@ public class POCDaoImpl implements POCDao
                            );
        }
 
-       logger.log (Level.INFO,
-                String.format("Inserted %s TRADES", tradeEntries.size()));
     }
 }

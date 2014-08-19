@@ -7,21 +7,19 @@ public class TradeObject
 {
     private String tradeId;
     private Map tradeAttributes;
-    private String tradeType;
-    private byte[] payload;
     private long createdTimeStamp;
+    private byte[] payload;
     private String payloadDigest;
 
     public TradeObject()
     {
     }
 
-    public TradeObject(String tradeId, Map tradeAttributes, String tradeType, byte[] payload, long createdTimeStamp, String payloadDigest) {
+    public TradeObject(String tradeId, Map tradeAttributes, long createdTimeStamp, byte[] payload, String payloadDigest) {
         this.tradeId = tradeId;
         this.tradeAttributes = tradeAttributes;
-        this.tradeType = tradeType;
-        this.payload = payload;
         this.createdTimeStamp = createdTimeStamp;
+        this.payload = payload;
         this.payloadDigest = payloadDigest;
     }
 
@@ -41,12 +39,12 @@ public class TradeObject
         this.tradeAttributes = tradeAttributes;
     }
 
-    public String getTradeType() {
-        return tradeType;
+    public long getCreatedTimeStamp() {
+        return createdTimeStamp;
     }
 
-    public void setTradeType(String tradeType) {
-        this.tradeType = tradeType;
+    public void setCreatedTimeStamp(long createdTimeStamp) {
+        this.createdTimeStamp = createdTimeStamp;
     }
 
     public byte[] getPayload() {
@@ -55,14 +53,6 @@ public class TradeObject
 
     public void setPayload(byte[] payload) {
         this.payload = payload;
-    }
-
-    public long getCreatedTimeStamp() {
-        return createdTimeStamp;
-    }
-
-    public void setCreatedTimeStamp(long createdTimeStamp) {
-        this.createdTimeStamp = createdTimeStamp;
     }
 
     public String getPayloadDigest() {
@@ -78,9 +68,8 @@ public class TradeObject
         return "TradeObject{" +
                 "tradeId='" + tradeId + '\'' +
                 ", tradeAttributes=" + tradeAttributes +
-                ", tradeType='" + tradeType + '\'' +
-                ", payload=" + Arrays.toString(payload) +
                 ", createdTimeStamp=" + createdTimeStamp +
+                ", payload=" + Arrays.toString(payload) +
                 ", payloadDigest='" + payloadDigest + '\'' +
                 '}';
     }

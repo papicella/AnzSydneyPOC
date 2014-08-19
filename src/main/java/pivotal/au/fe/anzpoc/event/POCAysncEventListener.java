@@ -32,7 +32,7 @@ public class POCAysncEventListener implements AsyncEventListener, Declarable
 
         for (AsyncEvent event: asyncEvents)
         {
-            if (event.getOperation().equals(Operation.CREATE))
+            if (event.getOperation().isCreate())
             {
                 PdxInstance pdxInstance = (PdxInstance) event.getDeserializedValue();
                 tradeEntries.add((TradeObject) pdxInstance.getObject());
