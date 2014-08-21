@@ -19,7 +19,7 @@ public class InsertTrades
     private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
     private ClientCache cache = null;
     private final int BATCH_SIZE = 1000;
-    private final int SAMPLE_SIZE = 10;
+    private final int SAMPLE_SIZE = 1000;
 
     public InsertTrades()
     {

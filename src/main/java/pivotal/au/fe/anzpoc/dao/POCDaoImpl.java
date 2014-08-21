@@ -10,18 +10,12 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class POCDaoImpl implements POCDao
 {
-    private Logger logger = Logger.getLogger(this.getClass().getSimpleName());
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
-    private List<TradeMetadata> tradeMetaDataList = new ArrayList<TradeMetadata>();
-    private Map<String, String> tradeMetaDataMap = new HashMap<String, String>();
 
     public void setDataSource(DataSource dataSource)
     {
@@ -32,21 +26,10 @@ public class POCDaoImpl implements POCDao
     public void storeTradeObjectBatch(List<TradeObject> tradeEntries)
     {
 
-      tradeMetaDataMap = new HashMap<String, String>();
-
        for (TradeObject trade: tradeEntries)
        {
-           tradeMetaDataList = new ArrayList<TradeMetadata>();
-           tradeMetaDataMap = new HashMap<String, String>();
-           tradeMetaDataMap = trade.getTradeAttributes();
-           TradeMetadata tradeMetaData = null;
-           for (Map.Entry<String,String> entry : tradeMetaDataMap.entrySet())
-           {
-               tradeMetaData =
-                       new TradeMetadata(trade.getTradeId(), entry.getKey(), entry.getValue());
 
-               tradeMetaDataList.add(tradeMetaData);
-           }
+           final List<TradeMetadata> tradeMetaDataList = createTradeMetaDataList(trade.getTradeAttributes(), trade.getTradeId());
 
            // insert single trade
            jdbcTemplate.update
@@ -78,5 +61,21 @@ public class POCDaoImpl implements POCDao
                            );
        }
 
+    }
+
+    private List<TradeMetadata> createTradeMetaDataList (Map<String, String> tradeMetaDataMap, String tradeId)
+    {
+        List<TradeMetadata> tradeMetaDataList = new ArrayList<TradeMetadata>();
+        TradeMetadata tradeMetaData = null;
+
+        for (Map.Entry<String,String> entry : tradeMetaDataMap.entrySet())
+        {
+            tradeMetaData =
+                    new TradeMetadata(tradeId, entry.getKey(), entry.getValue());
+
+            tradeMetaDataList.add(tradeMetaData);
+        }
+
+        return tradeMetaDataList;
     }
 }
