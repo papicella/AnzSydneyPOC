@@ -1,7 +1,6 @@
 package pivotal.au.fe.anzpoc.event;
 
 import com.gemstone.gemfire.cache.Declarable;
-import com.gemstone.gemfire.cache.Operation;
 import com.gemstone.gemfire.cache.asyncqueue.AsyncEvent;
 import com.gemstone.gemfire.cache.asyncqueue.AsyncEventListener;
 import com.gemstone.gemfire.pdx.PdxInstance;
@@ -26,7 +25,7 @@ public class POCAysncEventListener implements AsyncEventListener, Declarable
     {
         logger.log (Level.INFO, String.format("Size of List<AsyncEvent> = %s", asyncEvents.size()));
         applicationContext = ApplicationContextHolder.getInstance();
-        POCDao pocDaoImpl = (POCDao) applicationContext.getBean("pocDAOImpl");
+        POCDao pocDaoImpl = (POCDao) applicationContext.getBean(POCDao.class);
 
         List<TradeObject> tradeEntries = new ArrayList<TradeObject>();
 

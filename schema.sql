@@ -4,14 +4,14 @@ drop table if exists anz.trade_metadata cascade;
 create schema anz;
 
 create table anz.trades
-(trade_id integer not null primary key,
+(trade_id text not null primary key,
  payload_digest text,
  payload bytea,
- created_timestaamp integer)
+ created_timestamp text)
 DISTRIBUTED BY (trade_id);
 
 create table anz.trade_metadata
-(trade_id integer not null,
+(trade_id text not null,
  key text,
  value text)
 DISTRIBUTED BY (trade_id);
