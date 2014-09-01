@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.gemstone.gemfire</groupId>
-            <artifactId>gemfire</artifactId>
+            <artifactId>gemfire-core</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
