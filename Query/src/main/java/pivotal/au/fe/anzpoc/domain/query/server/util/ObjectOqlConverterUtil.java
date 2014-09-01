@@ -11,4 +11,15 @@ public class ObjectOqlConverterUtil {
         }
         return value.toString();
     }
+
+    public static String toSqlString(Object value) {
+        if (value instanceof Long) {
+            return Long.valueOf((Long) value) + "L";
+        } else if (value instanceof Enum<?>) {
+            return ((Enum) value).name();
+        } else if (value instanceof Boolean) {
+            value.toString();
+        }
+        return value.toString();
+    }
 }

@@ -15,6 +15,10 @@ public class TradeObject
     {
     }
 
+    public TradeObject(String tradeId) {
+        this.tradeId = tradeId;
+    }
+
     public TradeObject(String tradeId, Map tradeAttributes, long createdTimeStamp, byte[] payload, String payloadDigest) {
         this.tradeId = tradeId;
         this.tradeAttributes = tradeAttributes;

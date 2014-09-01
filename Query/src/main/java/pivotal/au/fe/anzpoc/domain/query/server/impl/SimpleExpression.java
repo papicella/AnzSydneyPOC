@@ -97,6 +97,47 @@ public class SimpleExpression implements ServerCriterion {
     }
 
     @Override
+    public String toSqlString() {
+        if (propertyName != null) {
+            // extract the property from the object and
+            // get the type.
+        } else {
+            throw new CriteriaException("PropertyName can not be null.");
+        }
+
+        // for now...
+        boolean eliminateQuote = false;
+        boolean isBoolean = false;
+        logger.debug("value: " + value);
+
+        if (value != null) {
+            if (value instanceof Number) {
+                value = value + "L";
+                eliminateQuote = true;
+            } else if (value instanceof Boolean) {
+                eliminateQuote = true;
+                isBoolean = true;
+            } else if (value instanceof Enum<?>) {
+                propertyName += ".toString()";
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (eliminateQuote) {
+            if (!isBoolean) {
+                stringBuilder.append(propertyName).append(" ");
+                stringBuilder.append(op);
+                stringBuilder.append(" ").append(value);
+            } else {
+                stringBuilder.append((Boolean) value ? "" : "NOT ").append(propertyName);
+            }
+            return stringBuilder.toString();
+        }
+        return stringBuilder.append(propertyName).append(" ").append(op).append(" '").append(value)
+                .append("'").toString();
+    }
+
+    @Override
     public void fromData(PdxReader reader) {
         this.propertyName = reader.readString("propertyName");
 

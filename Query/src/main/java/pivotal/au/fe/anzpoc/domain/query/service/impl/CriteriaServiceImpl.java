@@ -120,100 +120,58 @@ public class CriteriaServiceImpl implements CriteriaService {
 //        if (criteria.getCriteriaImpl().getProjectionEntries() != null
 //                && criteria.getCriteriaImpl().getProjectionEntries().size() > 0) {
 
-            logger.debug("projection query...");
-            StringBuilder oql = new StringBuilder();
-            oql.append("SELECT * ");
-            if (criteria.getCriteriaImpl().getOrders().size() > 0) {
-                oql.append("DISTINCT ");
-            }
+        logger.debug("projection query...");
+        StringBuilder oql = new StringBuilder();
+        oql.append("SELECT * ");
+        if (criteria.getCriteriaImpl().getOrders().size() > 0) {
+            oql.append("DISTINCT ");
+        }
 
 //      oql.append(criteria.getCriteriaImpl().getProjection().toOqlString());
 
-            int size = criteria.getCriteriaImpl().getProjectionEntries().size();
-            int count = 0;
-            for (ServerProjection projection : criteria.getCriteriaImpl().getProjectionEntries()) {
+        int size = criteria.getCriteriaImpl().getProjectionEntries().size();
+        int count = 0;
+        for (ServerProjection projection : criteria.getCriteriaImpl().getProjectionEntries()) {
 
-                logger.debug("server projection: " + projection);
-                oql.append(projection.toOqlString() + " ");
-                count++;
-                if (size > count) {
-                    oql.append(", ");
-                }
+            logger.debug("server projection: " + projection);
+            oql.append(projection.toOqlString() + " ");
+            count++;
+            if (size > count) {
+                oql.append(", ");
             }
-            // like this or past back select and criterion separately?
-            oql.append("FROM /" + criteria.getRegionName());
+        }
+        // like this or past back select and criterion separately?
+        oql.append("FROM /" + criteria.getRegionName());
 
-            List<CriterionEntry> criterionEntries = criteria.getCriteriaImpl().getCriterionEntries();
+        List<CriterionEntry> criterionEntries = criteria.getCriteriaImpl().getCriterionEntries();
 
-            boolean first = true;
-            for (CriterionEntry criterionEntry : criterionEntries) {
-                if (first) {
-                    oql.append(" WHERE ");
-                } else {
-                    oql.append(" AND ");
-                }
-                first = false;
-                oql.append(((ServerCriterion) criterionEntry.getCriterion()).toOqlString());
+        boolean first = true;
+        for (CriterionEntry criterionEntry : criterionEntries) {
+            if (first) {
+                oql.append(" WHERE ");
+            } else {
+                oql.append(" AND ");
             }
-            int oCount = 1;
-            for (Order order : criteria.getCriteriaImpl().getOrders()) {
-                if (oCount == 1) {
-                    oql.append(" ORDER BY ");
-                }
-                oql.append(order.toOqlString());
-                if (oCount == criteria.getCriteriaImpl().getOrders().size()) {
-
-                    // take last... need to come back to this.
-                    oql.append(order.isAscending() ? " ASC" : " DESC");
-                } else if (criteria.getCriteriaImpl().getOrders().size() > 1) {
-                    oql.append(", ");
-                }
-                oCount++;
+            first = false;
+            oql.append(((ServerCriterion) criterionEntry.getCriterion()).toOqlString());
+        }
+        int oCount = 1;
+        for (Order order : criteria.getCriteriaImpl().getOrders()) {
+            if (oCount == 1) {
+                oql.append(" ORDER BY ");
             }
-            logger.debug("oql string: " + oql);
-            return new OqlResult(OqlType.FULL_QUERY, oql.toString());
+            oql.append(order.toOqlString());
+            if (oCount == criteria.getCriteriaImpl().getOrders().size()) {
 
-//        } else {
-//            logger.debug("standard criterion query..." + criteria);
-//
-//            List<CriterionEntry> criterionEntries = criteria.getCriteriaImpl().getCriterionEntries();
-//            if (criterionEntries.size() == 0 && criteria.getCriteriaImpl().getOrders().size() == 0) {
-//                return new OqlResult(OqlType.ALL, null);
-//            }
-//            logger.debug("criterion entries.." + criterionEntries);
-//            StringBuilder whereClause = new StringBuilder();
-//            int size = criterionEntries.size();
-//            int i = 1;
-//            for (CriterionEntry criterionEntry : criterionEntries) {
-//
-//                whereClause.append(((ServerCriterion) criterionEntry.getCriterion()).toOqlString());
-//                if (i != size) {
-//                    whereClause.append(" AND ");
-//                }
-//                i++;
-//            }
-//
-//            logger.debug("whereclause: " + whereClause);
-//            int oCount = 1;
-//            for (Order order : criteria.getCriteriaImpl().getOrders()) {
-//                if (oCount == 1) {
-//                    whereClause.append(" ORDER BY ");
-//                }
-//                whereClause.append(order.toOqlString());
-//                logger.debug("whereclause2: " + whereClause);
-//                if (oCount == criteria.getCriteriaImpl().getOrders().size()) {
-//                    logger.debug("whereclause3: " + whereClause);
-//                    whereClause.append(order.isAscending() ? " ASC" : " DESC");
-//                    logger.debug("whereclause4: " + whereClause);
-//                } else if (criteria.getCriteriaImpl().getOrders().size() > 1) {
-//                    whereClause.append(", ");
-//                }
-//
-//                oCount++;
-//            }
-//            return new OqlResult(OqlType.WHERE_CLAUSE, whereClause.toString());
-//
-//        }
+                // take last... need to come back to this.
+                oql.append(order.isAscending() ? " ASC" : " DESC");
+            } else if (criteria.getCriteriaImpl().getOrders().size() > 1) {
+                oql.append(", ");
+            }
+            oCount++;
+        }
+        logger.debug("oql string: " + oql);
+        return new OqlResult(OqlType.FULL_QUERY, oql.toString());
     }
 
 }

@@ -1,6 +1,8 @@
 package pivotal.au.fe.anzpoc.dao;
 
+import com.sun.jmx.remote.internal.ArrayQueue;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import pivotal.au.fe.anzpoc.domain.TradeMetadata;
@@ -10,9 +12,7 @@ import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class POCDaoImpl implements POCDao {
     private JdbcTemplate jdbcTemplate;
@@ -51,7 +51,7 @@ public class POCDaoImpl implements POCDao {
                                 new BatchPreparedStatementSetter() {
                                     public void setValues(PreparedStatement ps, int i) throws SQLException {
                                         ps.setString(1,
-                                                ""+tradeMetaDataList.get(i).getTradeId().toString());
+                                                "" + tradeMetaDataList.get(i).getTradeId().toString());
                                         ps.setString(2, tradeMetaDataList.get(i).getKey());
                                         ps.setString(3, tradeMetaDataList.get(i).getValue());
                                     }
@@ -61,6 +61,37 @@ public class POCDaoImpl implements POCDao {
                                     }
                                 }
                         );
+    }
+
+    @Override
+    public Collection getResult(String sqlString) {
+        List<TradeObject> result = new ArrayList<TradeObject>();
+        List<TradeMetadata> tradeMetadata = new ArrayList<TradeMetadata>();
+        tradeMetadata = jdbcTemplate.query(sqlString, new BeanPropertyRowMapper<TradeMetadata>(TradeMetadata.class));
+        String prevTradeId = "";
+        Map<String, String> queryField = new HashMap<String, String>();
+        Map<String, Map<String, String>> tradeObjects = new TreeMap<String, Map<String, String>>();
+        for (TradeMetadata metadata : tradeMetadata) {
+            if (!prevTradeId.equals(metadata.getTradeId())) {
+                if (!prevTradeId.isEmpty()) {
+                    tradeObjects.put(metadata.getTradeId(), queryField);
+                    queryField.clear();
+                } else {
+                    queryField.put(metadata.getKey(), metadata.getValue());
+                }
+            }
+            prevTradeId = metadata.getTradeId();
+        }
+        tradeObjects.put(prevTradeId,queryField);
+
+        for (String tradeId : tradeObjects.keySet()) {
+            TradeObject tradeObject =
+            jdbcTemplate.queryForObject(Constants.QUERY_TRADE, new Object[]{tradeId}, new BeanPropertyRowMapper<TradeObject>(TradeObject.class));
+            tradeObject.setTradeAttributes(tradeObjects.get(tradeId));
+            result.add(tradeObject);
+        }
+
+        return result;
     }
 
     private List<TradeMetadata> createTradeMetaDataList(final List<TradeObject> tradeEntries) {

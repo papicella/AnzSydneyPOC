@@ -29,6 +29,11 @@ public class LogicalExpression implements ServerCriterion {
 				+ rhs.toOqlString() + ')';
 	}
 
+    public String toSqlString() {
+        return '(' + lhs.toSqlString() + ' ' + getOp() + ' '
+                + rhs.toSqlString() + ')';
+    }
+
 	public String getOp() {
 		return op;
 	}

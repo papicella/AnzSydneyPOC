@@ -40,6 +40,15 @@ public class LikeExpression implements ServerCriterion {
 
     }
 
+    /**
+     * TODO: bind params? utilize meta data.
+     */
+    @Override
+    public String toSqlString() {
+        return "key = '" + propertyName + "' AND value LIKE '" + matchMode.toMatchString(value.toString()) + "'";
+
+    }
+
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);

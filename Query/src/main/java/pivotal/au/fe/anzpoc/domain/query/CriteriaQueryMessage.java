@@ -17,6 +17,14 @@ public class CriteriaQueryMessage implements PdxSerializable {
 
     private String dataStore;
 
+    public String getDataStore() {
+        return dataStore;
+    }
+
+    public void setDataStore(String dataStore) {
+        this.dataStore = dataStore;
+    }
+
     public CriteriaQueryMessage() {
         super();
     }
@@ -54,6 +62,7 @@ public class CriteriaQueryMessage implements PdxSerializable {
     @Override
     public void fromData(PdxReader reader) {
         this.dataType = reader.readString("dataType");
+        this.dataStore = reader.readString("dataStore");
         this.criteria = (CriteriaImpl) reader
                 .readObject("criteria");
     }
@@ -61,6 +70,7 @@ public class CriteriaQueryMessage implements PdxSerializable {
     @Override
     public void toData(PdxWriter writer) {
         writer.writeString("dataType", dataType);
+        writer.writeString("dataStore", dataStore);
         writer.writeObject("criteria", criteria);
     }
 

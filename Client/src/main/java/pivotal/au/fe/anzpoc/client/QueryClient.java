@@ -36,10 +36,11 @@ public class QueryClient {
     private void run() {
         CriteriaQueryMessage criteriaQueryMessage = new CriteriaQueryMessage();
         criteriaQueryMessage.setDataType("tradeRegion");
+        criteriaQueryMessage.setDataStore("jdbc");
         CriteriaImpl criteria = new CriteriaImpl("tradeRegion");
         criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_1", MatchMode.ANYWHERE));
         criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_3", MatchMode.ANYWHERE));
-//        criteria.add(Restrictions.equal("tradeAttributes['field2']", "field2_1795"));
+        criteria.add(Restrictions.equal("tradeAttributes['field2']", "field2_1795"));
         criteriaQueryMessage.setCriteria(criteria);
         ResultCollector client = FunctionService.onServer(PoolManager.find("client")).withArgs(criteriaQueryMessage).execute("pivotal.au.fe.anzpoc.function.CriteriaQueryFunction");
         Object result = client.getResult();

@@ -10,4 +10,6 @@ public interface ServerCriterion extends PdxSerializable, Criterion {
      * @return The generated OQL fragment
      */
     public String toOqlString();
+
+    public String toSqlString();
 }

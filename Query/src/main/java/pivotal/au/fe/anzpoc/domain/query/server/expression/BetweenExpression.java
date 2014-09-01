@@ -20,15 +20,18 @@ public class BetweenExpression implements ServerCriterion {
 	@Override
 	public String toOqlString() {
 
-		// TODO come back.. why multiple prop names?
-		// need bind parameters?
-
-		// String[] propertyNames = new String[1];
-		// propertyNames[0] = propertyName;
 		return " (" + propertyName + " >= " + ObjectOqlConverterUtil.toOqlString(lo) + " AND " + propertyName
 				+ " <= " + ObjectOqlConverterUtil.toOqlString(hi) + ") ";
 
 	}
+
+    @Override
+    public String toSqlString() {
+
+        return " (key = '" + propertyName + "' AND value >= " + ObjectOqlConverterUtil.toSqlString(lo) + " AND " + propertyName
+                + " <= " + ObjectOqlConverterUtil.toSqlString(hi) + ") ";
+
+    }
 
 	@Override
 	public void fromData(PdxReader pdxReader) {

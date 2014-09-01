@@ -8,8 +8,8 @@
 
     <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
         <property name="poolName" value="springHikariCP" />
-        <property name="maximumPoolSize" value="100" />
-        <property name="minimumPoolSize" value="20" />
+        <property name="maximumPoolSize" value="50" />
+        <property name="connectionTestQuery" value="SELECT 1"/>
         <property name="dataSourceClassName" value="org.postgresql.ds.PGSimpleDataSource" />
         <property name="dataSourceProperties" ref="props" />
     </bean>
