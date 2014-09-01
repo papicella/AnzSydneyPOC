@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.gemstone.gemfire</groupId>
-            <artifactId>gemfire-core</artifactId>
+            <artifactId>gemfire</artifactId>
         </dependency>
     </dependencies>
 

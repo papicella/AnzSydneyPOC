@@ -33,6 +33,14 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>${project.parent.basedir}/Server/src/main/resources</directory>
+            <outputDirectory>/sys/${assembly.version.dir}/config</outputDirectory>
+            <includes>
+                <!-- include all files in all subdirecties -->
+                <include>**/*</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <dependencySets>
