@@ -1,15 +1,14 @@
 package pivotal.au.fe.anzpoc.dao;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import pivotal.au.fe.anzpoc.domain.TradeMetadata;
 import pivotal.au.fe.anzpoc.domain.TradeObject;
+import pivotal.au.fe.anzpoc.main.ApplicationContextHolder;
 
 import javax.sql.DataSource;
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
@@ -65,33 +64,60 @@ public class POCDaoImpl implements POCDao {
 
     @Override
     public Collection getResult(String sqlString) {
-        List<TradeObject> result = new ArrayList<TradeObject>();
-        List<TradeMetadata> tradeMetadata = new ArrayList<TradeMetadata>();
-        tradeMetadata = jdbcTemplate.query(sqlString, new BeanPropertyRowMapper<TradeMetadata>(TradeMetadata.class));
-        String prevTradeId = "";
+        List<TradeMetadata> tradeMetadatas = new ArrayList<TradeMetadata>();
+        setDataSource((DataSource) ApplicationContextHolder.getInstance().getBean("dataSource"));
+        tradeMetadatas = jdbcTemplate.query(sqlString, new BeanPropertyRowMapper<TradeMetadata>(TradeMetadata.class));
+        if (tradeMetadatas.size() == 0) {
+            return new ArrayList();
+        }
         Map<String, String> queryField = new HashMap<String, String>();
         Map<String, Map<String, String>> tradeObjects = new TreeMap<String, Map<String, String>>();
-        for (TradeMetadata metadata : tradeMetadata) {
+        TreeSet<String> tradeIds = new TreeSet<String>();
+        for (TradeMetadata tradeMetadata : tradeMetadatas) {
+            tradeIds.add(tradeMetadata.getTradeId());
+        }
+        String metaSQL = generateSQLStringForTradeIds(tradeIds, "anz.trade_metadata");
+        tradeMetadatas = jdbcTemplate.query(metaSQL, new BeanPropertyRowMapper<TradeMetadata>(TradeMetadata.class));
+        String prevTradeId = "";
+        for (TradeMetadata metadata : tradeMetadatas) {
             if (!prevTradeId.equals(metadata.getTradeId())) {
                 if (!prevTradeId.isEmpty()) {
-                    tradeObjects.put(metadata.getTradeId(), queryField);
-                    queryField.clear();
+                    tradeObjects.put(prevTradeId, queryField);
+                    queryField = new HashMap<String, String>();
+                    queryField.put(metadata.getKey(), metadata.getValue());
                 } else {
                     queryField.put(metadata.getKey(), metadata.getValue());
                 }
+            } else {
+                queryField.put(metadata.getKey(), metadata.getValue());
             }
             prevTradeId = metadata.getTradeId();
         }
-        tradeObjects.put(prevTradeId,queryField);
+        tradeObjects.put(prevTradeId, queryField);
 
-        for (String tradeId : tradeObjects.keySet()) {
-            TradeObject tradeObject =
-            jdbcTemplate.queryForObject(Constants.QUERY_TRADE, new Object[]{tradeId}, new BeanPropertyRowMapper<TradeObject>(TradeObject.class));
-            tradeObject.setTradeAttributes(tradeObjects.get(tradeId));
-            result.add(tradeObject);
+        String tradeSQL = generateSQLStringForTradeIds(tradeIds, "anz.trades");
+
+        List<TradeObject> trades = new ArrayList<TradeObject>();
+        trades = jdbcTemplate.query(tradeSQL, new BeanPropertyRowMapper<TradeObject>(TradeObject.class));
+        for (TradeObject trade : trades) {
+            trade.setTradeAttributes(tradeObjects.get(trade.getTradeId()));
         }
+        return trades;
+    }
 
-        return result;
+    private String generateSQLStringForTradeIds(TreeSet<String> tradeIds, String tableName) {
+        int count = 0;
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("select * from " + tableName + " where trade_id in(");
+        for (String tradeId : tradeIds) {
+            count++;
+            stringBuffer.append("'" + tradeId + "'");
+            if (count < tradeIds.size()) {
+                stringBuffer.append(",");
+            }
+        }
+        stringBuffer.append(") order by trade_id");
+        return stringBuffer.toString();
     }
 
     private List<TradeMetadata> createTradeMetaDataList(final List<TradeObject> tradeEntries) {

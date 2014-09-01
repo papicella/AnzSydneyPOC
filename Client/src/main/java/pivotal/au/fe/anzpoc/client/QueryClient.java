@@ -13,6 +13,7 @@ import pivotal.au.fe.anzpoc.domain.query.client.impl.CriteriaImpl;
 import pivotal.au.fe.anzpoc.domain.query.common.MatchMode;
 
 import javax.sql.PooledConnection;
+import java.util.List;
 
 
 public class QueryClient {
@@ -36,15 +37,15 @@ public class QueryClient {
     private void run() {
         CriteriaQueryMessage criteriaQueryMessage = new CriteriaQueryMessage();
         criteriaQueryMessage.setDataType("tradeRegion");
-        criteriaQueryMessage.setDataStore("jdbc");
+        criteriaQueryMessage.setDataStore("gemfire");
         CriteriaImpl criteria = new CriteriaImpl("tradeRegion");
         criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_1", MatchMode.ANYWHERE));
 //        criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_3", MatchMode.ANYWHERE));
-        criteria.add(Restrictions.equal("tradeAttributes['field2']", "field2_1795"));
+//        criteria.add(Restrictions.equal("tradeAttributes['field2']", "field2_1795"));
         criteriaQueryMessage.setCriteria(criteria);
         ResultCollector client = FunctionService.onServer(PoolManager.find("client")).withArgs(criteriaQueryMessage).execute("pivotal.au.fe.anzpoc.function.CriteriaQueryFunction");
-        Object result = client.getResult();
-        System.out.println("result = " + result);
+        List result = (List) client.getResult();
+        System.out.println("result = " + ((List)result.get(0)).size());
     }
 }
 
