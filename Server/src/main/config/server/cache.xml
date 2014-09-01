@@ -2,8 +2,8 @@
 "-//GemStone Systems, Inc.//GemFire Declarative Caching 8.0//EN" 
 "http://www.gemstone.com/dtd/cache8_0.dtd">
 <cache>
-    <async-event-queue id="tradeQueue" batch-size="1000" batch-time-interval="2000" parallel="true"
-                       dispatcher-threads="5" order-policy="key">
+    <async-event-queue id="tradeQueue" batch-size="5000" batch-time-interval="60000" parallel="true"
+                       dispatcher-threads="20" order-policy="partition">
         <async-event-listener>
             <class-name>pivotal.au.fe.anzpoc.event.POCAysncEventListener</class-name>
         </async-event-listener>
@@ -33,7 +33,11 @@
         </function>
     </function-service>
 
-    <resource-manager critical-heap-percentage="75" eviction-heap-percentage="65"/>    
+    <resource-manager critical-heap-percentage="75" eviction-heap-percentage="65"/>
+
+    <initializer>
+        <class-name>pivotal.au.fe.anzpoc.main.ApplicationContextHolder</class-name>
+    </initializer>
     
 </cache>
 

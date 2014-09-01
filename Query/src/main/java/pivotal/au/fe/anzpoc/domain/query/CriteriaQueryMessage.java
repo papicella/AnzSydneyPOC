@@ -11,55 +11,57 @@ import pivotal.au.fe.anzpoc.domain.query.common.Criteria;
 
 public class CriteriaQueryMessage implements PdxSerializable {
 
-  private String dataType;
-	// this needs to be the client criterion
-	private Criteria criteria;
+    private String dataType;
+    // this needs to be the client criterion
+    private Criteria criteria;
 
-	public CriteriaQueryMessage() {
-		super();
-	}
+    private String dataStore;
 
-	public String getDataType() {
-		return dataType;
-	}
+    public CriteriaQueryMessage() {
+        super();
+    }
 
-	public void setDataType(String dataType) {
-		this.dataType = dataType;
-	}
+    public String getDataType() {
+        return dataType;
+    }
 
-	public Criteria getCriteria() {
-		return criteria;
-	}
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
 
-	public void setCriteria(Criteria clientCriteria) {
-		this.criteria = clientCriteria;
-	}
+    public Criteria getCriteria() {
+        return criteria;
+    }
 
-	@Override
-	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(this);
-	}
+    public void setCriteria(Criteria clientCriteria) {
+        this.criteria = clientCriteria;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return EqualsBuilder.reflectionEquals(this, obj);
-	}
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
 
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
 
-	@Override
-	public void fromData(PdxReader reader) {
-		this.dataType = reader.readString("dataType");
-		this.criteria = (CriteriaImpl) reader
-				.readObject("criteria");
-	}
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 
-	@Override
-	public void toData(PdxWriter writer) {
-		writer.writeString("dataType", dataType);
-		writer.writeObject("criteria", criteria);
-	}
+    @Override
+    public void fromData(PdxReader reader) {
+        this.dataType = reader.readString("dataType");
+        this.criteria = (CriteriaImpl) reader
+                .readObject("criteria");
+    }
+
+    @Override
+    public void toData(PdxWriter writer) {
+        writer.writeString("dataType", dataType);
+        writer.writeObject("criteria", criteria);
+    }
 
 }

@@ -2,6 +2,7 @@ package pivotal.au.fe.anzpoc.dao;
 
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import pivotal.au.fe.anzpoc.domain.TradeMetadata;
 import pivotal.au.fe.anzpoc.domain.TradeObject;
 
@@ -21,6 +22,7 @@ public class POCDaoImpl implements POCDao {
     }
 
     @Override
+    @Transactional
     public void storeTradeObjectBatch(final List<TradeObject> tradeEntries) {
 
         final List<TradeMetadata> tradeMetaDataList = createTradeMetaDataList(tradeEntries);

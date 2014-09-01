@@ -1,9 +1,12 @@
 package pivotal.au.fe.anzpoc.main;
 
+import com.gemstone.gemfire.cache.Declarable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-public class ApplicationContextHolder
+import java.util.Properties;
+
+public class ApplicationContextHolder implements Declarable
 {
     private static ClassPathXmlApplicationContext applicationContext;
 
@@ -23,5 +26,10 @@ public class ApplicationContextHolder
             applicationContext = new ClassPathXmlApplicationContext(contextLocation);
         }
         return applicationContext;
+    }
+
+    @Override
+    public void init(Properties properties) {
+        getInstance();
     }
 }
