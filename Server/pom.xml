@@ -11,7 +11,10 @@
     <artifactId>anzPocServer</artifactId>
 
     <dependencies>
-
+        <dependency>
+            <groupId>antlr</groupId>
+            <artifactId>antlr</artifactId>
+        </dependency>
         <dependency>
             <groupId>anzsyd-poc</groupId>
             <artifactId>anzPocCommon</artifactId>

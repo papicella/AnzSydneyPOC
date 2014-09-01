@@ -25,9 +25,9 @@ import java.util.List;
 public class CriteriaServiceImpl implements CriteriaService {
 
     private static final Logger logger = LoggerFactory.getLogger(CriteriaServiceImpl.class);
-    private CriteriaMessagePreProcessor criteriaMessagePreProcessor;
+    private CriteriaMessagePreProcessor criteriaMessagePreProcessor = new CriteriaMessagePreProcessorImpl();
 
-    private ServerCriteriaUtil serverCriteriaUtil;
+    private ServerCriteriaUtil serverCriteriaUtil = new ServerCriteriaUtil();
 
     private static final String SEPARATOR = System.getProperty("line.separator");
 
@@ -117,12 +117,12 @@ public class CriteriaServiceImpl implements CriteriaService {
     public OqlResult getOqlResult(ServerCriteriaImpl criteria) {
 
         // full select query
-        if (criteria.getCriteriaImpl().getProjectionEntries() != null
-                && criteria.getCriteriaImpl().getProjectionEntries().size() > 0) {
+//        if (criteria.getCriteriaImpl().getProjectionEntries() != null
+//                && criteria.getCriteriaImpl().getProjectionEntries().size() > 0) {
 
             logger.debug("projection query...");
             StringBuilder oql = new StringBuilder();
-            oql.append("SELECT ");
+            oql.append("SELECT * ");
             if (criteria.getCriteriaImpl().getOrders().size() > 0) {
                 oql.append("DISTINCT ");
             }
@@ -173,47 +173,47 @@ public class CriteriaServiceImpl implements CriteriaService {
             logger.debug("oql string: " + oql);
             return new OqlResult(OqlType.FULL_QUERY, oql.toString());
 
-        } else {
-            logger.debug("standard criterion query..." + criteria);
-
-            List<CriterionEntry> criterionEntries = criteria.getCriteriaImpl().getCriterionEntries();
-            if (criterionEntries.size() == 0 && criteria.getCriteriaImpl().getOrders().size() == 0) {
-                return new OqlResult(OqlType.ALL, null);
-            }
-            logger.debug("criterion entries.." + criterionEntries);
-            StringBuilder whereClause = new StringBuilder();
-            int size = criterionEntries.size();
-            int i = 1;
-            for (CriterionEntry criterionEntry : criterionEntries) {
-
-                whereClause.append(((ServerCriterion) criterionEntry.getCriterion()).toOqlString());
-                if (i != size) {
-                    whereClause.append(" AND ");
-                }
-                i++;
-            }
-
-            logger.debug("whereclause: " + whereClause);
-            int oCount = 1;
-            for (Order order : criteria.getCriteriaImpl().getOrders()) {
-                if (oCount == 1) {
-                    whereClause.append(" ORDER BY ");
-                }
-                whereClause.append(order.toOqlString());
-                logger.debug("whereclause2: " + whereClause);
-                if (oCount == criteria.getCriteriaImpl().getOrders().size()) {
-                    logger.debug("whereclause3: " + whereClause);
-                    whereClause.append(order.isAscending() ? " ASC" : " DESC");
-                    logger.debug("whereclause4: " + whereClause);
-                } else if (criteria.getCriteriaImpl().getOrders().size() > 1) {
-                    whereClause.append(", ");
-                }
-
-                oCount++;
-            }
-            return new OqlResult(OqlType.WHERE_CLAUSE, whereClause.toString());
-
-        }
+//        } else {
+//            logger.debug("standard criterion query..." + criteria);
+//
+//            List<CriterionEntry> criterionEntries = criteria.getCriteriaImpl().getCriterionEntries();
+//            if (criterionEntries.size() == 0 && criteria.getCriteriaImpl().getOrders().size() == 0) {
+//                return new OqlResult(OqlType.ALL, null);
+//            }
+//            logger.debug("criterion entries.." + criterionEntries);
+//            StringBuilder whereClause = new StringBuilder();
+//            int size = criterionEntries.size();
+//            int i = 1;
+//            for (CriterionEntry criterionEntry : criterionEntries) {
+//
+//                whereClause.append(((ServerCriterion) criterionEntry.getCriterion()).toOqlString());
+//                if (i != size) {
+//                    whereClause.append(" AND ");
+//                }
+//                i++;
+//            }
+//
+//            logger.debug("whereclause: " + whereClause);
+//            int oCount = 1;
+//            for (Order order : criteria.getCriteriaImpl().getOrders()) {
+//                if (oCount == 1) {
+//                    whereClause.append(" ORDER BY ");
+//                }
+//                whereClause.append(order.toOqlString());
+//                logger.debug("whereclause2: " + whereClause);
+//                if (oCount == criteria.getCriteriaImpl().getOrders().size()) {
+//                    logger.debug("whereclause3: " + whereClause);
+//                    whereClause.append(order.isAscending() ? " ASC" : " DESC");
+//                    logger.debug("whereclause4: " + whereClause);
+//                } else if (criteria.getCriteriaImpl().getOrders().size() > 1) {
+//                    whereClause.append(", ");
+//                }
+//
+//                oCount++;
+//            }
+//            return new OqlResult(OqlType.WHERE_CLAUSE, whereClause.toString());
+//
+//        }
     }
 
 }

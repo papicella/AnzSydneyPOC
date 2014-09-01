@@ -3,6 +3,9 @@ package pivotal.au.fe.anzpoc.dao;
 import com.gemstone.gemfire.cache.CacheFactory;
 import com.gemstone.gemfire.cache.GemFireCache;
 import com.gemstone.gemfire.cache.Region;
+import com.gemstone.gemfire.cache.execute.ResultCollector;
+import com.gemstone.gemfire.cache.query.SelectResults;
+import com.gemstone.gemfire.cache.query.internal.ResultsCollectionPdxDeserializerWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -12,6 +15,7 @@ import pivotal.au.fe.anzpoc.domain.query.common.Criteria;
 import pivotal.au.fe.anzpoc.domain.query.server.OqlResult;
 import pivotal.au.fe.anzpoc.domain.query.server.impl.ServerCriteriaImpl;
 import pivotal.au.fe.anzpoc.domain.query.service.CriteriaService;
+import pivotal.au.fe.anzpoc.domain.query.service.impl.CriteriaServiceImpl;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -31,14 +35,8 @@ import java.util.Set;
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class GenericDaoImpl<K, V> implements GenericDao<K, V> {
-
-    private String clientPoolName;
     @Autowired
-    private BeanFactory beanFactory;
-    @Autowired
-    private CriteriaService criteriaService;
-//	@Autowired
-//    private EnterpriseDataImplUtil enterpriseDataImplUtil;
+    private CriteriaService criteriaService = new CriteriaServiceImpl();
 
     private static final Logger logger = LoggerFactory.getLogger(GenericDaoImpl.class);
 
@@ -105,7 +103,8 @@ public class GenericDaoImpl<K, V> implements GenericDao<K, V> {
         logger.debug("query: " + whereClause + " regionName: " + regionName);
         List result = null;
         try {
-            result = (List) getCache().getQueryService().newQuery(whereClause).execute();
+            Object execute = getCache().getQueryService().newQuery("<trace> " + whereClause).execute();
+            result = (List) ((SelectResults) execute).asList();
         } catch (Exception e) {
             e.printStackTrace();
         }

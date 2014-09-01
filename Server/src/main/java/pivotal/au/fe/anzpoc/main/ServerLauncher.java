@@ -13,7 +13,7 @@ public class ServerLauncher {
     public static void main(String[] args) throws IOException {
         Properties properties = new Properties();
         properties.load(getResourceAsStream("/home/udo/projects/AnzSydneyPOC/Server/src/main/config/server/gemfire.properties"));
-        Cache cache = new CacheFactory(properties).set("start-locator", "localhost[10334]").set("cache-xml-file", "/home/udo/projects/AnzSydneyPOC/Server/src/main/config/server/cache.xml").create();
+        Cache cache = new CacheFactory(properties).set("name","localServer").set("locators","127.0.0.1[10334]").set("server-bind-address","localhost").set("cache-xml-file", "/home/udo/projects/AnzSydneyPOC/Server/src/main/config/server/cache.xml").create();
 
         while (true) {
             try {

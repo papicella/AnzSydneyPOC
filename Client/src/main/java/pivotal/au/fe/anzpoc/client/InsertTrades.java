@@ -183,6 +183,7 @@ public class InsertTrades
         ClientCacheFactory ccf = new ClientCacheFactory();
         ccf.set("cache-xml-file", "client.xml");
         ccf.set("log-level", "config");
+        ccf.set("mcast-port", "0");
 
         cache = ccf.create();
     }

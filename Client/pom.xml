@@ -18,6 +18,11 @@
             <version>${parent.version}</version>
         </dependency>
         <dependency>
+            <groupId>anzsyd-poc</groupId>
+            <artifactId>Query</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.gemstone.gemfire</groupId>
             <artifactId>gemfire-core</artifactId>
         </dependency>
