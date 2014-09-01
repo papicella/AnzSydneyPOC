@@ -35,7 +35,7 @@ public class JDBCGenericDataServiceImpl implements GenericDataService {
     private String generateSQLStringFromCriteria(Criteria criteria) {
         ServerCriteriaImpl serverCriteria = (ServerCriteriaImpl) criteria;
         OqlResult oqlResult = null;
-        oqlResult = criteriaService.getOqlResult(serverCriteria);
+        oqlResult = criteriaService.getSqlResult(serverCriteria);
 
         return oqlResult.getOql();
     }

@@ -13,4 +13,6 @@ public interface CriteriaService {
 	OqlResult getOqlResult(ServerCriteriaImpl criteria);
 
     Collection postProcess(ServerCriteriaImpl serverCriteria, Collection results);
+
+    OqlResult getSqlResult(ServerCriteriaImpl serverCriteria);
 }

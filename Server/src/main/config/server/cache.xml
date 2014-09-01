@@ -8,7 +8,8 @@
             <class-name>pivotal.au.fe.anzpoc.event.POCAysncEventListener</class-name>
         </async-event-listener>
     </async-event-queue>
-    <pdx read-serialized="true">
+    <cache-server bind-address="localhost" port="0" hostname-for-clients="localhost"/>
+    <pdx read-serialized="false">
         <pdx-serializer>
             <class-name>com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer</class-name>
             <parameter name="classes">

@@ -114,6 +114,11 @@ public class CriteriaServiceImpl implements CriteriaService {
     }
 
     @Override
+    public OqlResult getSqlResult(ServerCriteriaImpl serverCriteria) {
+        return null;
+    }
+
+    @Override
     public OqlResult getOqlResult(ServerCriteriaImpl criteria) {
 
         // full select query

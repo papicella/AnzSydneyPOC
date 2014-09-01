@@ -133,7 +133,7 @@ public class SimpleExpression implements ServerCriterion {
             }
             return stringBuilder.toString();
         }
-        return stringBuilder.append(propertyName).append(" ").append(op).append(" '").append(value)
+        return stringBuilder.append("key = '"+propertyName+"'").append(" AND value ").append(op).append(" '").append(value)
                 .append("'").toString();
     }
 

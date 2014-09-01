@@ -18,6 +18,11 @@ public class JDBCCriteriaServiceImpl extends CriteriaServiceImpl implements Crit
     private static final Logger logger = LoggerFactory.getLogger(JDBCCriteriaServiceImpl.class);
     @Override
     public OqlResult getOqlResult(ServerCriteriaImpl criteria) {
+        return null;
+    }
+
+    @Override
+    public OqlResult getSqlResult(ServerCriteriaImpl criteria) {
         // full select query
 //        if (criteria.getCriteriaImpl().getProjectionEntries() != null
 //                && criteria.getCriteriaImpl().getProjectionEntries().size() > 0) {
@@ -57,7 +62,7 @@ public class JDBCCriteriaServiceImpl extends CriteriaServiceImpl implements Crit
             first = false;
             String restriction = ((ServerCriterion) criterionEntry.getCriterion()).toSqlString();
             restriction = unwrapRestriction(restriction);
-            oql.append(restriction);
+            oql.append("("+restriction+")");
         }
         int oCount = 1;
         logger.debug("oql string: " + oql);
@@ -65,9 +70,9 @@ public class JDBCCriteriaServiceImpl extends CriteriaServiceImpl implements Crit
     }
 
     private String unwrapRestriction(String restriction) {
-        int start = restriction.indexOf("['");
+        int start = restriction.indexOf("tradeAttributes['");
         int end = restriction.indexOf("']");
-        String field = restriction.substring(start+2,end);
-        return field+restriction.substring(end+2);
+        String field = restriction.substring(start+17,end);
+        return "key = '"+field+"' "+restriction.substring(end+3);
     }
 }

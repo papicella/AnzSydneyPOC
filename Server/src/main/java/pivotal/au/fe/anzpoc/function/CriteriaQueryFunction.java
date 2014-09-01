@@ -70,6 +70,7 @@ public class CriteriaQueryFunction extends FunctionAdapter implements Declarable
         } catch (Exception e) {
             // This would need to be replaced with sendException once the bug between server and
             // NC is resolved.
+            e.printStackTrace();
             logger.error("CriteriaQueryFunction ", e);
             fc.getResultSender().sendException(e);
         }
