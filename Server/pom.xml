@@ -14,7 +14,7 @@
 
         <dependency>
             <groupId>anzsyd-poc</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>anzPocCommon</artifactId>
             <version>${parent.version}</version>
         </dependency>
         <dependency>

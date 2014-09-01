@@ -18,7 +18,7 @@
         </fileSet>
         <!-- Configuration -->
         <fileSet>
-            <directory>${project.parent.basedir}/Server/src/main/resources/server</directory>
+            <directory>${project.parent.basedir}/Server/src/main/config/server</directory>
             <outputDirectory>/sys/${assembly.version.dir}/config/server</outputDirectory>
             <includes>
                 <!-- include all files in all subdirecties -->
@@ -26,7 +26,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.parent.basedir}/Server/src/main/resources/locator</directory>
+            <directory>${project.parent.basedir}/Server/src/main/config/locator</directory>
             <outputDirectory>/sys/${assembly.version.dir}/config/locator</outputDirectory>
             <includes>
                 <!-- include all files in all subdirecties -->
@@ -34,7 +34,7 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${project.parent.basedir}/Server/src/main/resources</directory>
+            <directory>${project.parent.basedir}/Server/src/main/config</directory>
             <outputDirectory>/sys/${assembly.version.dir}/config</outputDirectory>
             <includes>
                 <!-- include all files in all subdirecties -->
@@ -48,9 +48,6 @@
             <outputDirectory>/sys/${assembly.version.dir}/lib</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <useTransitiveDependencies>true</useTransitiveDependencies>
-            <!--<excludes>-->
-                <!--<exclude>*:Client</exclude>-->
-            <!--</excludes>-->
         </dependencySet>
     </dependencySets>
 </assembly>
