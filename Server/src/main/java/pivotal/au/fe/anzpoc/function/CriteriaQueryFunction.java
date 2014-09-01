@@ -3,6 +3,7 @@ package pivotal.au.fe.anzpoc.function;
 import com.gemstone.gemfire.cache.Declarable;
 import com.gemstone.gemfire.cache.execute.FunctionAdapter;
 import com.gemstone.gemfire.cache.execute.FunctionContext;
+import com.gemstone.gemfire.pdx.PdxInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,12 @@ public class CriteriaQueryFunction extends FunctionAdapter implements Declarable
     public void execute(FunctionContext fc) {
 
         try {
-            if (fc.getArguments() instanceof CriteriaQueryMessage) {
+            Object arguments = fc.getArguments();
+            if (arguments instanceof PdxInstance) {
+                PdxInstance pdxInstance = (PdxInstance) arguments;
+                arguments = pdxInstance.getObject();
+            }
+            if (arguments instanceof CriteriaQueryMessage) {
                 CriteriaQueryMessage criteriaQueryMessage = (CriteriaQueryMessage) fc.getArguments();
                 logger.trace("criteriaQueryMessage: " + criteriaQueryMessage);
 

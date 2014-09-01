@@ -5,6 +5,7 @@ import com.gemstone.gemfire.cache.client.ClientCacheFactory;
 import com.gemstone.gemfire.cache.client.PoolManager;
 import com.gemstone.gemfire.cache.execute.FunctionService;
 import com.gemstone.gemfire.cache.execute.ResultCollector;
+import org.apache.commons.lang.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pivotal.au.fe.anzpoc.domain.query.CriteriaQueryMessage;
@@ -14,6 +15,7 @@ import pivotal.au.fe.anzpoc.domain.query.common.MatchMode;
 
 import javax.sql.PooledConnection;
 import java.util.List;
+import java.util.Timer;
 
 
 public class QueryClient {
@@ -35,9 +37,11 @@ public class QueryClient {
     }
 
     private void run() {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         CriteriaQueryMessage criteriaQueryMessage = new CriteriaQueryMessage();
         criteriaQueryMessage.setDataType("tradeRegion");
-        criteriaQueryMessage.setDataStore("gemfire");
+        criteriaQueryMessage.setDataStore("jdbc");
         CriteriaImpl criteria = new CriteriaImpl("tradeRegion");
         criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_1", MatchMode.ANYWHERE));
 //        criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_3", MatchMode.ANYWHERE));
@@ -45,7 +49,23 @@ public class QueryClient {
         criteriaQueryMessage.setCriteria(criteria);
         ResultCollector client = FunctionService.onServer(PoolManager.find("client")).withArgs(criteriaQueryMessage).execute("pivotal.au.fe.anzpoc.function.CriteriaQueryFunction");
         List result = (List) client.getResult();
-        System.out.println("result = " + ((List)result.get(0)).size());
+        stopWatch.stop();
+        System.out.println("result = " + ((List)result.get(0)).size()+" Time taken: "+stopWatch.getTime());
+
+        stopWatch.reset();
+        stopWatch.start();
+        criteriaQueryMessage = new CriteriaQueryMessage();
+        criteriaQueryMessage.setDataType("tradeRegion");
+        criteriaQueryMessage.setDataStore("gemfire");
+        criteria = new CriteriaImpl("tradeRegion");
+        criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_1", MatchMode.ANYWHERE));
+//        criteria.add(Restrictions.like("tradeAttributes['field2']", "field2_3", MatchMode.ANYWHERE));
+//        criteria.add(Restrictions.equal("tradeAttributes['field2']", "field2_1795"));
+        criteriaQueryMessage.setCriteria(criteria);
+        client = FunctionService.onServer(PoolManager.find("client")).withArgs(criteriaQueryMessage).execute("pivotal.au.fe.anzpoc.function.CriteriaQueryFunction");
+        result = (List) client.getResult();
+        stopWatch.stop();
+        System.out.println("result = " + ((List)result.get(0)).size()+" Time taken: "+stopWatch.getTime());
     }
 }
 
